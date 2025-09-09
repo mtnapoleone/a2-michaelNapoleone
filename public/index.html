@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <title>CS4241 Assignment 2</title>
     <meta charset="utf-8">
     <script src="js/main.js"></script>
@@ -10,9 +11,18 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
-    <form>
-      <input type="text" id="yourname" value="your name here">
-      <button>submit</button>
+    <form id="carform">
+      <input type="text" id="model" placeholder="Model">
+      <input type="number" id="year" placeholder="Year">
+      <input type="number" id="mpg" placeholder="MPG">
+
+      <button type="submit">Add Car</button>
     </form>
+    <div id="results"></div>
+
   </body>
 </html>
+<!--https://www.w3schools.com/html/html_forms.asp -->
+<!--https://www.freecodecamp.org/news/html-form-input-type-and-submit-button-example/ -->
+
+<!--https://stackoverflow.com/questions/29775797/fetch-post-json-data for edit-->

@@ -1,8 +1,8 @@
 {
-  "name": "",
+  "name": "a2-michaelNapoleone",
   "version": "",
-  "description": "",
-  "author": "",
+  "description": "assignment 2 for webware server basics",
+  "author": "Michael Napoleone",
   "scripts": {
     "start": "node server.improved.js"
   },

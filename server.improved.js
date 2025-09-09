@@ -14,41 +14,68 @@ const appdata = [
   { "model": "ford", "year": 1987, "mpg": 14} 
 ]
 
-const server = http.createServer( function( request,response ) {
-  if( request.method === "GET" ) {
-    handleGet( request, response )    
-  }else if( request.method === "POST" ){
-    handlePost( request, response ) 
+const server = http.createServer(function(request, response) {
+  if (request.method === "GET") {
+    handleGet(request, response);
+  } else if (request.method === "POST") {
+    handlePost(request, response);
+  } else if (request.method === "PUT") {
+    handlePut(request, response);
   }
-})
+});
 
-const handleGet = function( request, response ) {
-  const filename = dir + request.url.slice( 1 ) 
 
-  if( request.url === "/" ) {
-    sendFile( response, "public/index.html" )
-  }else{
-    sendFile( response, filename )
+const handleGet = function(request, response) {
+  if (request.url === "/") {
+    sendFile(response, "public/index.html");
+  } else if (request.url === "/results") {
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify(appdata));
+  } else {
+    const filename = dir + request.url.slice(1);
+    sendFile(response, filename);
   }
-}
+};
 
-const handlePost = function( request, response ) {
-  let dataString = ""
+const handlePost = function(request, response) {
+  let dataString = "";
 
-  request.on( "data", function( data ) {
-      dataString += data 
-  })
+  request.on("data", function(data) {
+    dataString += data;
+  });
 
-  request.on( "end", function() {
-    console.log( JSON.parse( dataString ) )
+  request.on("end", function() {
+    const newEntry = JSON.parse(dataString);
+    newEntry.age = new Date().getFullYear() - newEntry.year;
+    appdata.push(newEntry);
 
-    // ... do something with the data here!!!
+    response.writeHead(200, "OK", { "Content-Type": "application/json" });
+    response.end(JSON.stringify(appdata));
+  });
+};
+const handlePut = function(request, response) {
+  let dataString = "";
 
-    response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-    response.end("test")
-  })
-}
+  request.on("data", function(data) {
+    dataString += data;
+  });
 
+  request.on("end", function() {
+    const updatedEntry = JSON.parse(dataString);
+    const index = appdata.findIndex(car => car.model === updatedEntry.model);
+
+    if (index !== -1) {
+      updatedEntry.age = new Date().getFullYear() - updatedEntry.year;
+      appdata[index] = updatedEntry;
+
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(appdata));
+    } else {
+      response.writeHead(404, { "Content-Type": "text/plain" });
+      response.end("Car not found");
+    }
+  });
+};
 const sendFile = function( response, filename ) {
    const type = mime.getType( filename ) 
 
@@ -71,4 +98,6 @@ const sendFile = function( response, filename ) {
    })
 }
 
+
 server.listen( process.env.PORT || port )
+//https://www.geeksforgeeks.org/node-js/build-a-simple-static-file-web-server-in-node-js/
